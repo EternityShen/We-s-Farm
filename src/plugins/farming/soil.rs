@@ -11,10 +11,10 @@ pub struct SoilSet {
 
 // 4 个方向的偏移与对应的二进制权值 (North=1, East=2, South=4, West=8)
 const NEIGHBORS: [(IVec2, usize); 4] = [
-    (IVec2::new(0, 1), 1 << 0),  // 上 (North)
-    (IVec2::new(1, 0), 1 << 1),  // 右 (East)
-    (IVec2::new(0, -1), 1 << 2), // 下 (South)
-    (IVec2::new(-1, 0), 1 << 3), // 左 (West)
+    (IVec2::new(0, 1), 1),  // 上 (North)
+    (IVec2::new(1, 0), 2),  // 右 (East)
+    (IVec2::new(0, -1), 4), // 下 (South)
+    (IVec2::new(-1, 0), 8), // 左 (West)
 ];
 
 impl SoilSet {
@@ -117,21 +117,23 @@ pub fn soil_listener(
         match message.ctrl {
             SoilCtrl::Add => {
                 if !soil_set.is_soil(message.pos) {
-                    let entity = commands
-                        .spawn((
-                            Sprite::from_atlas_image(
-                                soil_assets.texture.clone(),
-                                TextureAtlas {
-                                    layout: soil_assets.layout.clone(),
-                                    index: 0,
-                                },
-                            ),
-                            Transform::from_xyz(world_pos.x, world_pos.y, 5.0),
-                            Soil,
-                        ))
-                        .id();
+                    let entity = commands.spawn_empty().id();
 
                     soil_set.insert(message.pos, entity);
+
+                    let mask = soil_set.calculate_mask(message.pos);
+
+                    commands.entity(entity).insert((
+                        Sprite::from_atlas_image(
+                            soil_assets.texture.clone(),
+                            TextureAtlas {
+                                layout: soil_assets.layout.clone(),
+                                index: mask,
+                            },
+                        ),
+                        Transform::from_xyz(world_pos.x, world_pos.y, 5.0),
+                        Soil,
+                    ));
 
                     dirty_positions.insert(message.pos);
 
