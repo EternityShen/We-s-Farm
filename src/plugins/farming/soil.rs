@@ -118,7 +118,7 @@ pub fn soil_listener(
 
         match message.ctrl {
             SoilCtrl::Add => {
-                if !soil_set.is_soil(message.pos) && water_set.is_water(message.pos) {
+                if !soil_set.is_soil(message.pos) && !water_set.is_water(message.pos) {
                     let entity = commands.spawn_empty().id();
 
                     soil_set.insert(message.pos, entity);

@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::plugins::camera::MainCamera;
 
-use crate::plugins::farming::soil;
+use crate::plugins::farming::{plant, soil};
 use crate::utils::pos;
 
 #[derive(Component)]
@@ -74,13 +74,18 @@ pub fn click_check_box(
     mouse: Res<ButtonInput<MouseButton>>,
     check_box_pos: Res<CheckBoxPos>,
     mut soil_writer: MessageWriter<soil::SoilMessage>,
+    mut plant_writer: MessageWriter<plant::PlantMessage>,
 ) {
-    if !mouse.just_pressed(MouseButton::Left) {
+    if mouse.just_pressed(MouseButton::Left) {
+        soil_writer.write(soil::SoilMessage {
+            ctrl: soil::SoilCtrl::Add,
+            pos: check_box_pos.inate,
+        });
         return;
     }
-
-    soil_writer.write(soil::SoilMessage {
-        ctrl: soil::SoilCtrl::Add,
-        pos: check_box_pos.inate,
-    });
+    if mouse.just_pressed(MouseButton::Right) {
+        plant_writer.write(plant::PlantMessage {
+            pos: check_box_pos.inate,
+        });
+    }
 }

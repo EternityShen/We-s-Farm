@@ -7,7 +7,7 @@ use bevy_rapier2d::{
     plugin::RapierPhysicsPlugin, render::RapierDebugRenderPlugin,
 };
 
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct WaterSet {
     set: HashSet<IVec2>,
 }
@@ -35,6 +35,7 @@ impl Plugin for WorldPlugin {
         app.add_plugins(RapierDebugRenderPlugin::default());
         app.add_plugins(RapierPickingPlugin);
         app.insert_resource(LevelSelection::index(0));
+        app.init_resource::<WaterSet>();
         app.add_systems(Startup, setup);
         app.add_systems(Update, build_col_map);
     }

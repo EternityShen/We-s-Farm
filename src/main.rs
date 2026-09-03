@@ -9,7 +9,7 @@ fn main() {
         .add_plugins(plugins::camera::MainCameraPlugin)
         .add_plugins(plugins::sunhight::SunHightPlugin)
         .add_plugins(plugins::player::PlayerPlugin)
-        .add_plugins(plugins::farming::soil::SoilPlugin)
+        .add_plugins(plugins::farming::FarmIngPlugin)
         .add_plugins(plugins::check_box::CheckBoxPlugin)
         .run();
 }
