@@ -58,7 +58,7 @@ pub struct Crop {
     pub stage: CropStage,
 }
 
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct CropMap {
     pub map: HashMap<IVec2, Entity>,
 }
@@ -85,6 +85,7 @@ pub struct PlantPlugin;
 
 impl Plugin for PlantPlugin {
     fn build(&self, app: &mut App) {
+        app.init_resource::<CropMap>();
         app.add_message::<PlantMessage>();
         app.add_systems(Update, plant_listener);
         app.add_systems(Update, update_crop_animation_state);
@@ -110,6 +111,8 @@ pub fn plant_listener(
 
             let world_pos = pos::tile_to_world(message.pos);
 
+            let y_sort_z = pos::y_sort(world_pos.y);
+
             commands.spawn((
                 Sprite::from_atlas_image(
                     texture,
@@ -118,7 +121,7 @@ pub fn plant_listener(
                         index: 0,
                     },
                 ),
-                Transform::from_xyz(world_pos.x, world_pos.y + 5.0, 3.1),
+                Transform::from_xyz(world_pos.x, world_pos.y + 5.0, y_sort_z),
                 Crop {
                     crop_type: CropType::Wheat,
                     time: CropTime {
