@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
+use crate::plugins::world::WaterSet;
 use crate::utils::pos;
 
 #[derive(Resource, Default)]
@@ -106,6 +107,7 @@ pub fn soil_listener(
     mut commands: Commands,
     mut reader: MessageReader<SoilMessage>,
     mut soil_set: ResMut<SoilSet>,
+    water_set: Res<WaterSet>,
     soil_assets: Res<SoilAssets>,
     mut sprite_query: Query<&mut Sprite, With<Soil>>,
 ) {
@@ -116,7 +118,7 @@ pub fn soil_listener(
 
         match message.ctrl {
             SoilCtrl::Add => {
-                if !soil_set.is_soil(message.pos) {
+                if !soil_set.is_soil(message.pos) && water_set.is_water(message.pos) {
                     let entity = commands.spawn_empty().id();
 
                     soil_set.insert(message.pos, entity);
@@ -131,7 +133,7 @@ pub fn soil_listener(
                                 index: mask,
                             },
                         ),
-                        Transform::from_xyz(world_pos.x, world_pos.y, 5.0),
+                        Transform::from_xyz(world_pos.x, world_pos.y, 3.0),
                         Soil,
                     ));
 
