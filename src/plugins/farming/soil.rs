@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
+use crate::game_state::GameStates;
 use crate::plugins::world::WaterSet;
 use crate::utils::pos;
 
@@ -99,7 +100,7 @@ impl Plugin for SoilPlugin {
         app.init_resource::<SoilSet>();
         app.add_message::<SoilMessage>();
         app.add_systems(Startup, setup_soil_assets);
-        app.add_systems(Update, soil_listener);
+        app.add_systems(Update, soil_listener.run_if(in_state(GameStates::GameIng)));
     }
 }
 

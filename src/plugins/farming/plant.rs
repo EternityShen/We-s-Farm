@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use super::soil::SoilSet;
 
-use crate::utils::pos;
+use crate::{game_state::GameStates, utils::pos};
 
 #[derive(Message)]
 pub struct PlantMessage {
@@ -87,9 +87,15 @@ impl Plugin for PlantPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<CropMap>();
         app.add_message::<PlantMessage>();
-        app.add_systems(Update, plant_listener);
-        app.add_systems(Update, update_crop_animation_state);
-        app.add_systems(Update, animate_crop_sprite);
+        app.add_systems(Update, plant_listener.run_if(in_state(GameStates::GameIng)));
+        app.add_systems(
+            Update,
+            update_crop_animation_state.run_if(in_state(GameStates::GameIng)),
+        );
+        app.add_systems(
+            Update,
+            animate_crop_sprite.run_if(in_state(GameStates::GameIng)),
+        );
     }
 }
 

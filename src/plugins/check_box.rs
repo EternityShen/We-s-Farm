@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+use crate::game_state::GameStates;
 use crate::plugins::camera::MainCamera;
 
 use crate::plugins::farming::{plant, soil};
@@ -19,8 +20,11 @@ impl Plugin for CheckBoxPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<CheckBoxPos>();
         app.add_systems(Startup, setup);
-        app.add_systems(Update, check);
-        app.add_systems(Update, click_check_box);
+        app.add_systems(Update, check.run_if(in_state(GameStates::GameIng)));
+        app.add_systems(
+            Update,
+            click_check_box.run_if(in_state(GameStates::GameIng)),
+        );
     }
 }
 

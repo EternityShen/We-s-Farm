@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+use crate::game_state::GameStates;
+
 #[derive(Component)]
 pub struct Player;
 
@@ -9,9 +11,15 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup);
-        app.add_systems(Update, move_player);
-        app.add_systems(Update, update_player_animation_state);
-        app.add_systems(Update, animate_player_sprite);
+        app.add_systems(Update, move_player.run_if(in_state(GameStates::GameIng)));
+        app.add_systems(
+            Update,
+            update_player_animation_state.run_if(in_state(GameStates::GameIng)),
+        );
+        app.add_systems(
+            Update,
+            animate_player_sprite.run_if(in_state(GameStates::GameIng)),
+        );
     }
 }
 

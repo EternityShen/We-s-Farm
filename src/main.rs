@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 
-use we_s_fram::plugins;
+use we_s_fram::{game_state::GameStates, plugins};
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .init_state::<GameStates>()
         .add_plugins(plugins::world::WorldPlugin)
         .add_plugins(plugins::camera::MainCameraPlugin)
         .add_plugins(plugins::sunhight::SunHightPlugin)
