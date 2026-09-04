@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 
 use super::soil::SoilSet;
 
@@ -119,6 +119,9 @@ pub fn plant_listener(
 
             let y_sort_z = pos::y_sort(world_pos.y);
 
+            let mut ancher = Anchor::BOTTOM_CENTER;
+            ancher.0.y += 0.2;
+
             commands.spawn((
                 Sprite::from_atlas_image(
                     texture,
@@ -127,7 +130,8 @@ pub fn plant_listener(
                         index: 0,
                     },
                 ),
-                Transform::from_xyz(world_pos.x, world_pos.y + 5.0, y_sort_z),
+                ancher,
+                Transform::from_xyz(world_pos.x, world_pos.y, y_sort_z),
                 Crop {
                     crop_type: CropType::Wheat,
                     time: CropTime {

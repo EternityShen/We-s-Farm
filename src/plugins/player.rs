@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 use bevy_rapier2d::prelude::*;
 
 use crate::game_state::GameStates;
@@ -67,6 +67,9 @@ fn setup(
 
     let anim_config = AnimationConfig::new(0, 1, 4.0);
 
+    let mut ancher = Anchor::BOTTOM_CENTER;
+    ancher.0.y += 0.2;
+
     commands.spawn((
         Sprite::from_atlas_image(
             texture,
@@ -75,11 +78,12 @@ fn setup(
                 index: 0,
             },
         ),
+        ancher,
         Transform::from_xyz(50.0, 50.0, 4.0),
         Player,
         // 碰撞
         RigidBody::Dynamic,
-        Collider::ball(6.0),
+        Collider::ball(3.0),
         LockedAxes::ROTATION_LOCKED,
         Friction::coefficient(0.0),
         Velocity::default(),
